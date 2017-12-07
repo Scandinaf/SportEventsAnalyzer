@@ -8,10 +8,10 @@ import com.typesafe.config.Config
 case class Website(protocol: String, domain: String, pagePath: String)
 
 object Website {
-  def apply(config: Config): Website = new Website(
-    config.getString(Config.protocol),
-    config.getString(Config.domain),
-    config.getString(Config.pagePath))
+  def apply(config: Config): Website =
+    new Website(config.getString(Config.protocol),
+                config.getString(Config.domain),
+                config.getString(Config.pagePath))
 
   object Config {
     val blockName = "websites"
