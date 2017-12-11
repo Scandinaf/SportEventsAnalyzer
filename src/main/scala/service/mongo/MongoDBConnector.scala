@@ -1,20 +1,21 @@
-package service
+package service.mongo
 
 /**
   * Created by serge on 07.12.2017.
   */
 import org.mongodb.scala.connection.ClusterSettings
 import org.mongodb.scala.{MongoClient, MongoClientSettings, MongoCredential, ServerAddress}
+import service.Config
 
 import scala.collection.JavaConverters._
 
-object MongoDB {
+protected object MongoDBConnector {
 
   private val mongoSettings = Config.mongoDBSettings
   private val mongoClient = initializeMongoClient
-  private val db = mongoClient.getDatabase(mongoSettings.db)
-
-  def getCollection(collectionName: String) = db.getCollection(collectionName)
+  val db = mongoClient
+    .getDatabase(mongoSettings.db)
+    .withCodecRegistry(Codecs.codecRegistry)
 
   def getListDatabase =
     mongoClient.listDatabaseNames().toFuture()

@@ -1,5 +1,3 @@
-
-
 /**
   * Created by serge on 20.11.2017.
   */

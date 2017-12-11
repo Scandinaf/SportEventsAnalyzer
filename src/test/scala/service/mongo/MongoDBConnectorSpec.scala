@@ -1,4 +1,4 @@
-package service
+package service.mongo
 
 import org.scalatest.FlatSpec
 
@@ -8,12 +8,12 @@ import scala.concurrent.duration._
 /**
   * Created by serge on 07.12.2017.
   */
-class MongoDBSpec extends FlatSpec {
+class MongoDBConnectorSpec extends FlatSpec {
 
-  behavior of "MongoDB"
+  behavior of "MongoDBConnector"
 
   it should "correctly initialize the connection" in {
-    val databaseList = Await.result(MongoDB.getListDatabase, 1 minute)
+    val databaseList = Await.result(MongoDBConnector.getListDatabase, 1 minute)
     assert(!databaseList.isEmpty)
   }
 }
