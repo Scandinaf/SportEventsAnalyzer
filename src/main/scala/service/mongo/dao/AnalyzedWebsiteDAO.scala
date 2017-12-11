@@ -22,7 +22,7 @@ trait AnalyzedWebsiteDAO {
       extends BaseDAOComponent[AnalyzedWebsite]
       with MongoResultHelper[AnalyzedWebsite] {
 
-    val duration = 1 minute
+    val duration = 1.minute
 
     def findById(_id: ObjectId): Seq[AnalyzedWebsite] =
       collection.find(equal(MongoObject.Field._id, _id)).getAll
