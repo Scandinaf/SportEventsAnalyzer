@@ -14,5 +14,6 @@ trait MongoResultHelper[T <: MongoObject] {
   implicit class FindObservableImpl[T](ob: FindObservable[T]) {
     def getAll =
       Await.result(ob.toFuture(), duration)
+    def get = getAll.headOption
   }
 }

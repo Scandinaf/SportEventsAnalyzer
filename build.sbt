@@ -9,5 +9,10 @@ scalacOptions ++= Seq("-feature")
 libraryDependencies += "com.typesafe" % "config" % "1.3.2"
 libraryDependencies += "org.mongodb.scala" %% "mongo-scala-driver" % "2.1.0"
 
+/*Akka*/
+libraryDependencies += "com.typesafe.akka" %% "akka-http" % "10.0.11"
+libraryDependencies += "com.typesafe.akka" %% "akka-stream" % "2.5.8"
+libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.5.8"
+
 /* Test Dependency */
 libraryDependencies += "org.scalatest" % "scalatest_2.12" % "3.0.4" % "test"
