@@ -21,10 +21,4 @@ trait BaseDAOComponent[T <: MongoObject] {
 
   def deleteById(_id: ObjectId) =
     collection.deleteOne(equal(MongoObject.Field._id, _id))
-
-  def findAllById(_id: ObjectId): Seq[T] =
-    collection.find(equal(MongoObject.Field._id, _id)).getAll
-
-  def findById(_id: ObjectId): Option[T] =
-    collection.find(equal(MongoObject.Field._id, _id)).get
 }

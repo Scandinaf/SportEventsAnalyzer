@@ -1,17 +1,15 @@
 package service.http
 
-import akka.actor.ActorSystem
+import _root_.model.ApplicationSettings.Actor.{executionContext, materializer, system}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
-import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Sink, Source}
 
 /**
   * Created by serge on 12.12.2017.
   */
 object HttpClient {
-  implicit val materializer = ActorMaterializer()
-  private val http = Http(ActorSystem())
+  private val http = Http(system)
   private val threadCount = 5
 
   object Get {
@@ -23,12 +21,13 @@ object HttpClient {
         .mapAsync(threadCount)(http.singleRequest(_))
         .runWith(Sink.seq)
 
-    def callByStream[T](requestIt: Iterator[HttpRequest])(
+    def callByStreamWithHandler[T](requestIt: Iterator[HttpRequest])(
         handler: (HttpRequest, HttpResponse) => T) =
       Source
         .fromIterator(() => requestIt)
-        .mapAsync(threadCount)(http.singleRequest(_))
-        .map(handler(_))
+        .mapAsync(threadCount)(req =>
+          http.singleRequest(req).map(res => (req, res)))
+        .map(r => handler(r._1, r._2))
         .runWith(Sink.ignore)
   }
 }
