@@ -5,9 +5,11 @@ import org.mongodb.scala.MongoCollection
 import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.IndexOptions
 import org.mongodb.scala.model.Indexes._
+import service.logging.Logger
 import service.mongo.MongoDBConnector
 import service.mongo.helper.MongoResultHelper
 import service.mongo.model.AnalyzedWebsite
+import service.mongo.observer.IndexObserver
 import util.DateHelper
 
 /**
@@ -21,7 +23,8 @@ trait AnalyzedWebsiteDAO {
   protected class AnalyzedWebsiteDAOComponent(
       protected val collection: MongoCollection[AnalyzedWebsite])
       extends BaseDAOComponent[AnalyzedWebsite]
-      with MongoResultHelper[AnalyzedWebsite] {
+      with MongoResultHelper[AnalyzedWebsite]
+      with Logger {
 
     import AnalyzedWebsite.Field._
 
@@ -38,11 +41,15 @@ trait AnalyzedWebsiteDAO {
         collection.find(query).getAll
       }
 
-    private def initializeIndexes =
-      collection.createIndex(ascending(domain),
-                             IndexOptions()
-                               .name(s"asc_${domain}")
-                               .background(false)
-                               .unique(true))
+    private def initializeIndexes = {
+      val dIN = s"asc_${domain}"
+      collection
+        .createIndex(ascending(domain),
+                     IndexOptions()
+                       .name(dIN)
+                       .background(false)
+                       .unique(true))
+        .subscribe(IndexObserver(dIN))
+    }
   }
 }
