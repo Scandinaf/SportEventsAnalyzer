@@ -12,9 +12,9 @@ object Config {
   private val config = ConfigFactory.load()
 
   def websites = {
-    val configList: Seq[Config] =
-      config.getConfigList(Website.Config.blockName).asScala
-    configList map (Website(_))
+    val configList =
+      config.getConfigList(Website.Config.blockName).asScala.toVector
+    configList.map(Website(_))
   }
 
   def mongoDBSettings =

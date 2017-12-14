@@ -4,6 +4,7 @@ import org.scalatest.FlatSpec
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
+import scala.language.postfixOps
 
 /**
   * Created by serge on 07.12.2017.

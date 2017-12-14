@@ -12,7 +12,7 @@ import scala.concurrent.Await
 trait MongoResultHelper[T <: MongoObject] {
   implicit class FindObservableImpl[T](ob: FindObservable[T]) {
     def getAll =
-      Await.result(ob.toFuture(), timeout)
+      Await.result(ob.toFuture(), timeout).toVector
     def get = getAll.headOption
   }
 }

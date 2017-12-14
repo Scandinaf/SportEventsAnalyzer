@@ -30,8 +30,8 @@ trait AnalyzedWebsiteDAO {
     def findByDomain(domain: String) =
       collection.find(equal(AnalyzedWebsite.Field.domain, domain)).get
 
-    def findByDomains(websites: Seq[Website]) =
-      if (websites.isEmpty) Seq.empty
+    def findByDomains(websites: Vector[Website]) =
+      if (websites.isEmpty) Vector.empty
       else {
         val query = and(in(domain, websites.map(_.domain)),
                         lte(expirationDate, DateHelper.getCurrentDate))

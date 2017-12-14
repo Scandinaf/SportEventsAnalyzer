@@ -14,5 +14,8 @@ libraryDependencies += "com.typesafe.akka" %% "akka-http" % "10.0.11"
 libraryDependencies += "com.typesafe.akka" %% "akka-stream" % "2.5.8"
 libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.5.8"
 
+/*Logging*/
+libraryDependencies += "org.slf4j" % "slf4j-log4j12" % "1.7.25"
+
 /* Test Dependency */
 libraryDependencies += "org.scalatest" % "scalatest_2.12" % "3.0.4" % "test"

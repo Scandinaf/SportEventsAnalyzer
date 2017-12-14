@@ -8,7 +8,7 @@ import service.analyzer.model.DataMessage
   */
 class AnalyzerActor extends Actor {
   override def receive: Receive = {
-    case DataMessage(uri, data) => println("Actor")
+    case DataMessage(uri, data) => println(s"Actor, $uri")
     case _                      => println("something wrong!!!")
   }
 }

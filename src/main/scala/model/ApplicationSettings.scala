@@ -14,7 +14,8 @@ object ApplicationSettings {
   object Actor {
     implicit val system = ActorSystem("WebsiteAnalyzer")
     implicit val materializer = ActorMaterializer()
-    implicit val executionContext = scala.concurrent.ExecutionContext.global
+    implicit val executionContext =
+      system.dispatchers.lookup("fork-join-dispatcher")
     val analyzerActor = system.actorOf(Props[AnalyzerActor], "analyzerActor")
   }
   val timeout = 1 minute
