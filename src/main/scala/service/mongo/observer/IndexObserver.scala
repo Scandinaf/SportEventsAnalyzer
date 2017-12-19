@@ -16,7 +16,7 @@ class IndexObserver(val indexName: String)
   override def onComplete(): Unit =
     logger.info(s"Index $indexName was created successfully!!!")
 
-  override def onNext(result: String): Unit = super.onNext(result)
+  override def onNext(result: String): Unit = {}
 }
 
 object IndexObserver {
