@@ -13,6 +13,10 @@ class ConfigSpec extends FlatSpec {
     assert(!Config.websites.isEmpty)
   }
 
+  "KeyWords block" should "be non-empty" in {
+    assert(!Config.keyWords.isEmpty)
+  }
+
   "Attempt to read the MongoDB block" should "not throw exception" in {
     Config.mongoDBSettings
   }

@@ -17,5 +17,10 @@ libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.5.8"
 /*Logging*/
 libraryDependencies += "org.slf4j" % "slf4j-log4j12" % "1.7.25"
 
+/*HTML Parser*/
+libraryDependencies += "net.ruippeixotog" %% "scala-scraper" % "2.0.0"
+
 /* Test Dependency */
 libraryDependencies += "org.scalatest" % "scalatest_2.12" % "3.0.4" % "test"
+libraryDependencies += "org.scalamock" %% "scalamock" % "4.0.0" % Test
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % Test

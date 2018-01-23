@@ -37,7 +37,7 @@ trait AnalyzedWebsiteDAO {
       if (websites.isEmpty) Vector.empty
       else {
         val query = and(in(domain, websites.map(_.domain)),
-                        lte(expirationDate, DateHelper.getCurrentDate))
+                        gte(expirationDate, DateHelper.getCurrentDate))
         collection.find(query).getAll
       }
 

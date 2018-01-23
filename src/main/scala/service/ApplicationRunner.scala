@@ -33,8 +33,7 @@ class ApplicationRunner extends Logger {
 
   private def calculateLeft(websites: Vector[Website],
                             analyzedWebsites: Vector[AnalyzedWebsite]) =
-    websites.filter(w =>
-      !analyzedWebsites.exists(aw => aw.domain.equals(w.domain)))
+    websites.filter(w => !analyzedWebsites.exists(aw => aw.domain == w.domain))
 }
 
 object ApplicationRunner {
