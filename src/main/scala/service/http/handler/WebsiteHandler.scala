@@ -2,7 +2,7 @@ package service.http.handler
 import java.nio.charset.StandardCharsets
 
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse, ResponseEntity, StatusCodes}
-import model.ApplicationSettings.Actor.{analyzerActor, executionContext, materializer}
+import model.ApplicationSettings.Actor.{forkJoinEC, analyzerActor, materializer}
 import model.ApplicationSettings.timeout
 import service.analyzer.model.DataMessage
 import service.logging.Logger

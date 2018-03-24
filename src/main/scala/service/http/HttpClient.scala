@@ -1,6 +1,6 @@
 package service.http
 
-import _root_.model.ApplicationSettings.Actor.{executionContext, materializer, system}
+import _root_.model.ApplicationSettings.Actor.{forkJoinEC, materializer, system}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
 import akka.stream.scaladsl.{Sink, Source}

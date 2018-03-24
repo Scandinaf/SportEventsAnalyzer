@@ -1,26 +1,21 @@
 package service.analyzer
 
-import java.util.concurrent.ForkJoinPool
-
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
-import service.logging.Logger
-
-import scala.concurrent.ExecutionContext
+import net.ruippeixotog.scalascraper.dsl.DSL._
+import service.analyzer.module.factory.ModuleFactory
 
 /**
   * Created by serge on 19.12.2017.
   */
-protected[analyzer] class SiteAnalyzer(content: String) extends Logger {
+protected[analyzer] class SiteAnalyzer(content: String) {
   private val doc = JsoupBrowser().parseString(content)
-  private val parallelism = 5
-  implicit val ec: ExecutionContext =
-    ExecutionContext.fromExecutor(new ForkJoinPool(parallelism))
 
-  lazy val analyze = {
-    TagAnalyzer(doc).tag.map(r => {
-      logger.info(s"KeyWords - $r")
-      println(r)
-    })
+  def analyze = {
+    val elements =
+      doc >> "div#oddsList > form#f1 > div.container.gray > div.wrapper > table.dt.twp > tbody:not(.props,.spacer) > tr"
+    ModuleFactory
+      .getModule(ModuleFactory.Modules.parimatchTS)
+      .process(elementQuery = elements)
   }
 }
 

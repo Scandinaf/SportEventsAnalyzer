@@ -14,7 +14,7 @@ object ApplicationSettings {
   object Actor {
     implicit val system = ActorSystem("WebsiteAnalyzer")
     implicit val materializer = ActorMaterializer()
-    implicit val executionContext =
+    implicit val forkJoinEC =
       system.dispatchers.lookup("fork-join-dispatcher")
     val analyzerActor = system.actorOf(Props[AnalyzerActor], "analyzerActor")
   }
