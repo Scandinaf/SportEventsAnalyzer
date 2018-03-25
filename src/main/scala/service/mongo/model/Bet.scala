@@ -8,3 +8,13 @@ case class Bet(winF: Double,
                winS: Double,
                winFD: Option[Double] = None,
                winSD: Option[Double] = None)
+
+object Bet {
+  object Field {
+    val winF = "winF"
+    val draw = "draw"
+    val winS = "winS"
+    val winFD = "winFD"
+    val winSD = "winSD"
+  }
+}

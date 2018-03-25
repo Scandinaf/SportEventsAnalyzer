@@ -14,3 +14,13 @@ case class SportEvent(_id: ObjectId = new ObjectId(),
                       date: Date,
                       bet: Bet)
     extends MongoObject
+
+object SportEvent {
+  object Field {
+    val event = "event"
+    val firstTeam = "firstTeam"
+    val secondTeam = "secondTeam"
+    val date = "date"
+    val bet = "bet"
+  }
+}

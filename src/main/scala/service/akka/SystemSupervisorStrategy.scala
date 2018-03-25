@@ -16,7 +16,8 @@ class SystemSupervisorStrategy
   override def create(): SupervisorStrategy =
     OneForOneStrategy(maxNrOfRetries = 10, withinTimeRange = 1 minute) {
       case x => {
-        logger.error(s"Exception - ${x}")
+        logger.error("Something went wrong during the execution of the actor.",
+                     x)
         Restart
       }
     }

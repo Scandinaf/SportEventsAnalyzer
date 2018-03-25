@@ -2,7 +2,6 @@ package service
 
 import _root_.akka.http.scaladsl.model.HttpRequest
 import model.Website
-import service.analyzer.module.factory.ModuleFactory
 import service.http.HttpClient
 import service.http.handler.WebsiteHandler
 import service.http.model.HttpRequestCompanion
@@ -16,7 +15,6 @@ import service.mongo.model.AnalyzedWebsite
 class ApplicationRunner extends Logger {
 
   def start = {
-    ModuleFactory
     val websites = Config.websites
     val analyzedWebsites = DBLayer.analyzedWebsiteDAO.findByDomains(websites)
     val leftPart = calculateLeft(websites, analyzedWebsites)

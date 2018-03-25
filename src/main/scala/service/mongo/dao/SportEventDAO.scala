@@ -4,6 +4,7 @@ import org.mongodb.scala.MongoCollection
 import service.logging.Logger
 import service.mongo.MongoDBConnector
 import service.mongo.helper.MongoResultHelper
+import service.mongo.indexes.SportEventIndexInitializer
 import service.mongo.model.SportEvent
 
 /**
@@ -15,8 +16,11 @@ trait SportEventDAO {
     MongoDBConnector.db.getCollection(collectionName))
 
   protected class SportEventDAOComponent(
-      protected val collection: MongoCollection[SportEvent])
+      val collection: MongoCollection[SportEvent])
       extends BaseDAOComponent[SportEvent]
       with MongoResultHelper[SportEvent]
-      with Logger
+      with SportEventIndexInitializer
+      with Logger {
+    initializeIndexes
+  }
 }
