@@ -30,6 +30,8 @@ class AnalyzerActor extends Actor with Logger {
 
   protected def process(uri: Uri, data: String) = {
     logger.info(s"Received message. Uri - $uri")
-    SiteAnalyzer(data).analyze
+    val cssQuery =
+      "div#oddsList > form#f1 > div.container.gray > div.wrapper > table.dt.twp > tbody:not(.props,.spacer) > tr"
+    SiteAnalyzer(data, cssQuery).analyze
   }
 }

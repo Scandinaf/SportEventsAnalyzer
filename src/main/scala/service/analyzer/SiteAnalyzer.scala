@@ -3,22 +3,20 @@ package service.analyzer
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
 import net.ruippeixotog.scalascraper.dsl.DSL._
 import service.analyzer.module.factory.ModuleFactory
+import service.logging.Logger
 
 /**
   * Created by serge on 19.12.2017.
   */
-protected[analyzer] class SiteAnalyzer(content: String) {
+protected[analyzer] class SiteAnalyzer(content: String, cssQuery: String)
+    extends Logger {
   private val doc = JsoupBrowser().parseString(content)
-
-  def analyze = {
-    val elements =
-      doc >> "div#oddsList > form#f1 > div.container.gray > div.wrapper > table.dt.twp > tbody:not(.props,.spacer) > tr"
-    ModuleFactory
-      .getModule(ModuleFactory.Modules.parimatchTS)
-      .process(elementQuery = elements)
-  }
+  lazy val analyze = ModuleFactory
+    .getModule(ModuleFactory.Modules.parimatchTS)
+    .fold(err => logger.error(err.msg), m => m.process(doc >> cssQuery))
 }
 
 object SiteAnalyzer {
-  def apply(content: String): SiteAnalyzer = new SiteAnalyzer(content)
+  def apply(content: String, cssQuery: String): SiteAnalyzer =
+    new SiteAnalyzer(content, cssQuery)
 }

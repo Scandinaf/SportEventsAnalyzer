@@ -10,8 +10,8 @@ class IndexObserver(val indexName: String)
     extends Observer[String]
     with Logger {
   override def onError(e: Throwable): Unit =
-    logger.error(
-      s"Index creation process was interrupted. Index - $indexName, ex - $e")
+    logger.error(s"Index creation process was interrupted. Index - $indexName.",
+                 e)
 
   override def onComplete(): Unit =
     logger.info(s"Index $indexName was created successfully!!!")

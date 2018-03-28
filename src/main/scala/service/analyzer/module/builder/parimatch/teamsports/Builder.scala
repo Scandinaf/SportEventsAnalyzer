@@ -6,7 +6,6 @@ import net.ruippeixotog.scalascraper.model.{Element, TextNode}
 import service.analyzer.exception.IncorrectHtmlException
 import service.analyzer.module.builder.ModelBuilder
 import service.analyzer.module.builder.parimatch.Config.TeamSports._
-import service.logging.Logger
 import service.mongo.model.{Bet, SportEvent}
 
 import scala.util.Try
@@ -14,7 +13,7 @@ import scala.util.Try
 /**
   * Created by serge on 08.03.2018.
   */
-protected[module] trait Builder extends ModelBuilder[SportEvent] with Logger {
+protected[module] trait Builder extends ModelBuilder[SportEvent] {
   protected val dFormat: SimpleDateFormat = new SimpleDateFormat("dd/MM HH:mm")
   override def build(textPosMap: Map[String, Int],
                      element: Element): Try[SportEvent] =
@@ -47,12 +46,13 @@ protected[module] trait Builder extends ModelBuilder[SportEvent] with Logger {
   protected def getEvent(el: Element) = {
     val aEl = el.select("a")
     if (aEl.size != 1)
-      throw new IncorrectHtmlException
+      throw new IncorrectHtmlException(el)
     aEl.head.childNodes
       .filter(_.isInstanceOf[TextNode])
       .map(_.asInstanceOf[TextNode].content)
       .toVector match {
       case Vector(fT, sT) => (fT, sT)
+      case _              => throw new IncorrectHtmlException(el)
     }
   }
 }

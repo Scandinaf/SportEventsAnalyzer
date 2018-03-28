@@ -4,6 +4,7 @@ import akka.actor.{ActorSystem, Props}
 import akka.stream.ActorMaterializer
 import service.analyzer.AnalyzerActor
 
+import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
@@ -14,9 +15,11 @@ object ApplicationSettings {
   object Actor {
     implicit val system = ActorSystem("WebsiteAnalyzer")
     implicit val materializer = ActorMaterializer()
-    implicit val forkJoinEC =
-      system.dispatchers.lookup("fork-join-dispatcher")
-    val analyzerActor = system.actorOf(Props[AnalyzerActor], "analyzerActor")
+    implicit val forkJoinEC: ExecutionContext =
+      system.dispatchers.lookup("fork-join-dispatcher-common")
+    val analyzerActor = system.actorOf(
+      Props[AnalyzerActor].withDispatcher("fork-join-dispatcher"),
+      "analyzerActor")
   }
   val timeout = 1 minute
 }

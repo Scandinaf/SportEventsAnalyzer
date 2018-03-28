@@ -1,5 +1,5 @@
 package service.analyzer.module.factory
-import service.analyzer.exception.ModuleNotFoundException
+import service.analyzer.exception.Error
 import service.analyzer.module.Module
 import service.analyzer.module.impl.parimatch.teamsports.ModuleImpl
 import service.logging.Logger
@@ -10,12 +10,10 @@ import service.logging.Logger
 object ModuleFactory extends Logger {
   val moduleMap = Map(Modules.parimatchTS -> new ModuleImpl)
 
-  def getModule(moduleName: String): Module =
+  def getModule(moduleName: String): Either[Error, Module] =
     moduleMap.get(moduleName) match {
-      case Some(m) => m
-      case _ =>
-        throw new ModuleNotFoundException(
-          s"$moduleName - Module could not be found.")
+      case Some(m) => Right(m)
+      case _       => Left(Error(s"$moduleName - Module could not be found."))
     }
 
   object Modules {

@@ -1,6 +1,6 @@
 package service.akka
 
-import akka.actor.SupervisorStrategy.Restart
+import akka.actor.SupervisorStrategy.Resume
 import akka.actor.{OneForOneStrategy, SupervisorStrategy, SupervisorStrategyConfigurator}
 import service.logging.Logger
 
@@ -18,7 +18,7 @@ class SystemSupervisorStrategy
       case x => {
         logger.error("Something went wrong during the execution of the actor.",
                      x)
-        Restart
+        Resume
       }
     }
 }
