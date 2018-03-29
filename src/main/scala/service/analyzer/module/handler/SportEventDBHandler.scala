@@ -3,7 +3,7 @@ package service.analyzer.module.handler
 import org.mongodb.scala.BulkWriteResult
 import org.mongodb.scala.result.UpdateResult
 import service.logging.Logger
-import service.mongo.DBLayer.{sportEventDAO => dao}
+import service.mongo.DBLayer
 import service.mongo.model.SportEvent
 import service.mongo.observer.CommonObserver
 
@@ -12,6 +12,7 @@ import service.mongo.observer.CommonObserver
   */
 protected[module] trait SportEventDBHandler extends Handler[SportEvent] {
   _: Logger =>
+  val dao: DBLayer.SportEventDAOComponent
 
   def handle(obj: SportEvent) =
     dao
