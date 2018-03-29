@@ -5,6 +5,7 @@ package service.analyzer.module.builder.parimatch
   */
 object Config {
   object TeamSports {
+    val fields = List("Событие", "Дата", "П1", "X", "П2", "1X", "X2")
     val event = "Событие"
     val date = "Дата"
     val winF = "П1"

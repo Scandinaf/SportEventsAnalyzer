@@ -14,12 +14,18 @@ import service.utils.ImplicitHelper.VectorImplicits.flattenWithLog
 protected[module] trait ModuleSportEvent extends Module {
   _: Handler[SportEvent] with ModelBuilder[SportEvent] with Logger =>
   def process(elementQuery: ElementQuery[Element]): Either[Error, Unit] =
-    if (elementQuery.size > 2) {
-      val headersMap = getHeadersMap(elementQuery)
-      val sportEvents: Vector[SportEvent] =
-        elementQuery.tail.map(e => build(headersMap, e)).toVector
-      Right(handleCollection(sportEvents))
-    } else
+    if (elementQuery.size > 2)
+      validate(getHeadersMap(elementQuery)).fold(
+        l =>
+          Left(
+            Error(s"The following keys were not found: ${l.mkString(",")}.")),
+        headersMap => {
+          val sportEvents: Vector[SportEvent] =
+            elementQuery.tail.map(e => build(headersMap, e)).toVector
+          Right(handleCollection(sportEvents))
+        }
+      )
+    else
       Left(Error(
         s"The transmitted data is incorrect. Module - ${getClass.getName}. Size - ${elementQuery.size}"))
 

@@ -1,5 +1,6 @@
 package service.analyzer
 
+import _root_.model.Page
 import akka.actor.SupervisorStrategy._
 import akka.actor.{Actor, OneForOneStrategy, SupervisorStrategy}
 import akka.http.scaladsl.model.Uri
@@ -24,14 +25,15 @@ class AnalyzerActor extends Actor with Logger {
     }
 
   override def receive: Receive = {
-    case DataMessage(uri, data) => process(uri, data)
-    case um                     => logger.error(s"Unhandled message!!! $um")
+    case DataMessage(uri, data, p) => process(uri, data, p)
+    case um                        => logger.error(s"Unhandled message!!! $um")
   }
 
-  protected def process(uri: Uri, data: String) = {
+  protected def process(uri: Uri, data: String, p: Page) = {
     logger.info(s"Received message. Uri - $uri")
-    val cssQuery =
-      "div#oddsList > form#f1 > div.container.gray > div.wrapper > table.dt.twp > tbody:not(.props,.spacer) > tr"
-    SiteAnalyzer(data, cssQuery).analyze
+    SiteAnalyzer(data, p.cssQuery, p.module).analyze match {
+      case Left(err) => logger.error(s"Uri - $uri, Page - $p, Error - $err.")
+      case _         =>
+    }
   }
 }

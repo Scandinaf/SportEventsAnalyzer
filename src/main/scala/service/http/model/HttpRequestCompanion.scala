@@ -1,16 +1,19 @@
 package service.http.model
 
 import akka.http.scaladsl.model.HttpRequest
-import model.Website
+import model.{Page, Website}
 
 /**
   * Created by serge on 13.12.2017.
   */
 object HttpRequestCompanion {
+  def apply(websites: Vector[Website]): Vector[(HttpRequest, Page)] =
+    websites
+      .map(w =>
+        w.pages.map(p =>
+          (HttpRequest(uri = buildUri(w.protocol, w.domain, p.path)), p)))
+      .flatten
 
-  def apply(website: Website): HttpRequest =
-    HttpRequest(uri = buildUri(website))
-
-  private def buildUri(w: Website) =
-    s"${w.protocol}://${w.domain}${w.pagePath}"
+  private def buildUri(protocol: String, domain: String, path: String) =
+    s"$protocol://$domain$path"
 }

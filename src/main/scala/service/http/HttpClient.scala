@@ -21,13 +21,13 @@ object HttpClient {
         .mapAsync(threadCount)(http.singleRequest(_))
         .runWith(Sink.seq)
 
-    def callByStreamWithHandler[T](requestIt: Iterator[HttpRequest])(
-        handler: (HttpRequest, HttpResponse) => T) =
+    def callByStreamWithHandler[E, T](requestIt: Iterator[(HttpRequest, E)])(
+        handler: (HttpRequest, HttpResponse, E) => T) =
       Source
         .fromIterator(() => requestIt)
-        .mapAsync(threadCount)(req =>
-          http.singleRequest(req).map(res => (req, res)))
-        .map(r => handler(r._1, r._2))
+        .mapAsync(threadCount)(el =>
+          http.singleRequest(el._1).map((el._1, _, el._2)))
+        .map(r => handler(r._1, r._2, r._3))
         .runWith(Sink.ignore)
   }
 }
