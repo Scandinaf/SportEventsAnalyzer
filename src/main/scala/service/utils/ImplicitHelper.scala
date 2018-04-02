@@ -1,5 +1,7 @@
 package service.utils
 
+import java.util.Calendar
+
 import model.ApplicationSettings.Actor.forkJoinEC
 import service.logging.Logger
 
@@ -8,6 +10,20 @@ import scala.language.implicitConversions
 import scala.util.{Failure, Try}
 
 object ImplicitHelper extends Logger {
+  object CalendarImplicits {
+    implicit class CalendarBuilder(c: Calendar) {
+      def setB(field: Int, value: Int) = {
+        c.set(field, value)
+        c
+      }
+
+      def addB(field: Int, value: Int) = {
+        c.add(field, value)
+        c
+      }
+    }
+  }
+
   object VectorImplicits {
     implicit def flattenWithLog[T](collection: Vector[Try[T]]): Vector[T] = {
       val r = collection.span(_.isSuccess)

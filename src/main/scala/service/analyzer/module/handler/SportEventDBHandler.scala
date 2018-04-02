@@ -20,7 +20,8 @@ protected[module] trait SportEventDBHandler extends Handler[SportEvent] {
       .subscribe(new CommonObserver[UpdateResult])
 
   def handleCollection(collection: Vector[SportEvent]) =
-    dao
-      .insertOrUpdate(collection)
-      .subscribe(new CommonObserver[BulkWriteResult])
+    if (collection.nonEmpty)
+      dao
+        .insertOrUpdate(collection)
+        .subscribe(new CommonObserver[BulkWriteResult])
 }

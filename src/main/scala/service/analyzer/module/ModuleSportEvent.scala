@@ -7,6 +7,7 @@ import service.analyzer.module.handler.Handler
 import service.logging.Logger
 import service.mongo.model.SportEvent
 import service.utils.ImplicitHelper.VectorImplicits.flattenWithLog
+import service.utils.TimeDateUtil._
 
 /**
   * Created by serge on 24.03.2018.
@@ -14,7 +15,7 @@ import service.utils.ImplicitHelper.VectorImplicits.flattenWithLog
 protected[module] trait ModuleSportEvent extends Module {
   _: Handler[SportEvent] with ModelBuilder[SportEvent] with Logger =>
   def process(elementQuery: ElementQuery[Element]): Either[Error, Unit] =
-    if (elementQuery.size > 2)
+    if (elementQuery.size > 1)
       validate(getHeadersMap(elementQuery)).fold(
         l =>
           Left(
@@ -22,7 +23,9 @@ protected[module] trait ModuleSportEvent extends Module {
         headersMap => {
           val sportEvents: Vector[SportEvent] =
             elementQuery.tail.map(e => build(headersMap, e)).toVector
-          Right(handleCollection(sportEvents))
+          Right(
+            handleCollection(
+              checkDateInRange[SportEvent](sportEvents, DayRange, _.date)))
         }
       )
     else
