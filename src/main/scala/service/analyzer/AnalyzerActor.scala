@@ -37,3 +37,7 @@ class AnalyzerActor extends Actor with Logger {
     }
   }
 }
+
+object AnalyzerActor {
+  val name = "analyzerActor"
+}

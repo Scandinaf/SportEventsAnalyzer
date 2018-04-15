@@ -9,28 +9,28 @@ import service.mongo.observer.IndexObserver
 trait IndexHelper[T <: MongoObject] {
   val collection: MongoCollection[T]
 
-  def createAscendingIndex(fldName: String) = {
+  protected def createAscendingIndex(fldName: String) = {
     val indexName = s"asc_$fldName"
     createIndex(indexName,
                 Indexes.ascending(fldName),
                 getDefaultIndexOptions(indexName))
   }
 
-  def createDescendingIndex(fldName: String) = {
+  protected def createDescendingIndex(fldName: String) = {
     val indexName = s"des_$fldName"
     createIndex(indexName,
                 Indexes.descending(fldName),
                 getDefaultIndexOptions(indexName))
   }
 
-  def createTextIndex(fldName: String) = {
+  protected def createTextIndex(fldName: String) = {
     val indexName = s"text_$fldName"
     createIndex(indexName,
                 Indexes.text(fldName),
                 getDefaultIndexOptions(indexName))
   }
 
-  def createIndex(indexName: String, key: Bson, opt: IndexOptions) =
+  protected def createIndex(indexName: String, key: Bson, opt: IndexOptions) =
     addIndexObserver(collection.createIndex(key, opt), indexName)
 
   protected def addIndexObserver(singleObservable: SingleObservable[String],

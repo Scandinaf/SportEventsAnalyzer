@@ -1,7 +1,6 @@
 package service.analyzer.module.builder.parimatch.teamsports
 
-import java.text.SimpleDateFormat
-
+import com.github.nscala_time.time.Imports.DateTimeFormat
 import net.ruippeixotog.scalascraper.model.{Element, TextNode}
 import service.analyzer.exception.IncorrectHtmlException
 import service.analyzer.module.builder.ModelBuilder
@@ -14,7 +13,7 @@ import scala.util.Try
   * Created by serge on 08.03.2018.
   */
 protected[module] trait Builder extends ModelBuilder[SportEvent] {
-  protected val dFormat: SimpleDateFormat = new SimpleDateFormat("dd/MM HH:mm")
+  protected val dtf = DateTimeFormat.forPattern("dd/MM HH:mm")
   override def build(textPosMap: Map[String, Int],
                      element: Element): Try[SportEvent] =
     Try(buildSE(element.children.toVector, textPosMap))

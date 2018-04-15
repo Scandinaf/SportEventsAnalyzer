@@ -1,5 +1,5 @@
 package service.analyzer.module.factory
-import service.analyzer.exception.Error
+import model.Error
 import service.analyzer.module.Module
 import service.analyzer.module.impl.parimatch.teamsports.ModuleImpl
 import service.logging.Logger

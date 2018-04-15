@@ -1,9 +1,10 @@
 package service.analyzer.module.builder
 
-import java.text.SimpleDateFormat
 import java.util.Calendar
 
+import com.github.nscala_time.time.Imports.DateTime
 import net.ruippeixotog.scalascraper.model.Element
+import org.joda.time.format.DateTimeFormatter
 import service.analyzer.exception.KeyNotFoundException
 
 import scala.util.Try
@@ -12,14 +13,14 @@ import scala.util.Try
   * Created by serge on 08.03.2018.
   */
 protected[module] trait ModelBuilder[T] {
-  protected val dFormat: SimpleDateFormat
+  protected val dtf: DateTimeFormatter
   def build(textPosMap: Map[String, Int], element: Element): Try[T]
 
   protected def getDate(el: Element) = {
     val c = Calendar.getInstance()
     val currentMonth = c.get(Calendar.MONTH)
     val currentYear = c.get(Calendar.YEAR)
-    c.setTime(dFormat.parse(el.text))
+    c.setTime(DateTime.parse(el.text, dtf).toDate)
     c.set(Calendar.YEAR, currentYear)
     if (currentMonth > c.get(Calendar.MONTH))
       c.add(Calendar.YEAR, 1)

@@ -5,14 +5,14 @@ import service.mongo.model.SportEvent
 import service.mongo.model.SportEvent.Field._
 
 trait SportEventIndexInitializer extends IndexInitializer[SportEvent] {
-  override def initializeIndexes: Unit = {
+  override protected def initializeIndexes: Unit = {
     createAscendingIndex(firstTeam)
     createAscendingIndex(secondTeam)
     createDescendingIndex(date)
     createDateEventIndex
   }
 
-  def createDateEventIndex = {
+  protected def createDateEventIndex = {
     val indexName = s"$date-$event"
     createIndex(
       indexName,

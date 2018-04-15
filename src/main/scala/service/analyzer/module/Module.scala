@@ -1,7 +1,7 @@
 package service.analyzer.module
 
+import model.Error
 import net.ruippeixotog.scalascraper.model.{Element, ElementQuery}
-import service.analyzer.exception.Error
 import service.analyzer.module.validator.KeyWordsValidator
 
 /**

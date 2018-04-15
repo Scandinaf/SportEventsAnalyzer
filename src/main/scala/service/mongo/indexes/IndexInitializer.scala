@@ -6,5 +6,5 @@ import service.mongo.model.MongoObject
 
 trait IndexInitializer[T <: MongoObject] extends IndexHelper[T] {
   val collection: MongoCollection[T]
-  def initializeIndexes
+  protected def initializeIndexes
 }

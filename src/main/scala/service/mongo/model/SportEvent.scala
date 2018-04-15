@@ -12,7 +12,8 @@ case class SportEvent(_id: ObjectId = new ObjectId(),
                       firstTeam: String,
                       secondTeam: String,
                       date: Date,
-                      bet: Bet)
+                      bet: Bet,
+                      eventResult: Option[EventResult] = None)
     extends MongoObject
 
 object SportEvent {
@@ -22,5 +23,6 @@ object SportEvent {
     val secondTeam = "secondTeam"
     val date = "date"
     val bet = "bet"
+    val eventResult = "eventResult"
   }
 }

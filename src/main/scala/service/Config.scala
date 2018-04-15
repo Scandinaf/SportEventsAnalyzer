@@ -4,7 +4,7 @@ package service
   * Created by serge on 05.12.2017.
   */
 import com.typesafe.config._
-import model.{MongoDBSettings, Website}
+import model.{MongoDBSettings, PostEventStatisticsParimatch, Website}
 
 import scala.collection.JavaConverters._
 
@@ -20,4 +20,8 @@ object Config {
 
   lazy val mongoDBSettings =
     MongoDBSettings(config.getConfig(MongoDBSettings.Config.blockName))
+
+  lazy val postEventStatisticsParimatchSettings =
+    PostEventStatisticsParimatch(
+      config.getConfig(PostEventStatisticsParimatch.Config.blockName))
 }

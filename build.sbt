@@ -7,7 +7,7 @@ scalaVersion := "2.12.4"
 scalacOptions ++= Seq("-feature")
 
 libraryDependencies += "com.typesafe" % "config" % "1.3.2"
-libraryDependencies += "org.mongodb.scala" %% "mongo-scala-driver" % "2.1.0"
+libraryDependencies += "org.mongodb.scala" %% "mongo-scala-driver" % "2.2.1"
 
 /*Akka*/
 libraryDependencies += "com.typesafe.akka" %% "akka-http" % "10.0.11"
@@ -24,3 +24,6 @@ libraryDependencies += "net.ruippeixotog" %% "scala-scraper" % "2.0.0"
 libraryDependencies += "org.scalatest" % "scalatest_2.12" % "3.0.4" % "test"
 libraryDependencies += "org.scalamock" %% "scalamock" % "4.0.0" % Test
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % Test
+
+/* NScala-time */
+libraryDependencies += "com.github.nscala-time" %% "nscala-time" % "2.18.0"

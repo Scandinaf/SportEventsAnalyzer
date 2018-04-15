@@ -13,13 +13,10 @@ object HttpClient {
   private val threadCount = 5
 
   object Get {
-    def singleCall(uri: String) = http.singleRequest(HttpRequest(uri = uri))
-
-    def callByStream(requestIt: Iterator[HttpRequest]) =
-      Source
-        .fromIterator(() => requestIt)
-        .mapAsync(threadCount)(http.singleRequest(_))
-        .runWith(Sink.seq)
+    def singleCall[E, T](request: HttpRequest,
+                         v: E,
+                         handler: (HttpRequest, HttpResponse, E) => T) =
+      http.singleRequest(request).map(handler(request, _, v))
 
     def callByStreamWithHandler[E, T](requestIt: Iterator[(HttpRequest, E)])(
         handler: (HttpRequest, HttpResponse, E) => T) =
