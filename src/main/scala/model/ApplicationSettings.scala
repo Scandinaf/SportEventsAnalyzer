@@ -21,7 +21,9 @@ object ApplicationSettings {
     implicit val forkJoinEC: ExecutionContext =
       system.dispatchers.lookup("fork-join-dispatcher-common")
     val analyzerActor = system.actorOf(
-      Props[AnalyzerActor].withDispatcher("fork-join-dispatcher"),
+      SmallestMailboxPool(5)
+        .props(Props[AnalyzerActor])
+        .withDispatcher("fork-join-dispatcher"),
       AnalyzerActor.name)
     val postEventStatisticsActor = system.actorOf(
       Props[PostEventStatisticsActor].withDispatcher("fork-join-dispatcher"),

@@ -22,7 +22,7 @@ object HttpClient {
         handler: (HttpRequest, HttpResponse, E) => T) =
       Source
         .fromIterator(() => requestIt)
-        .mapAsync(threadCount)(el =>
+        .mapAsyncUnordered(threadCount)(el =>
           http.singleRequest(el._1).map((el._1, _, el._2)))
         .map(r => handler(r._1, r._2, r._3))
         .runWith(Sink.ignore)
