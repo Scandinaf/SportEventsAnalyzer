@@ -25,16 +25,21 @@ object ImplicitHelper extends Logger {
   }
 
   object VectorImplicits {
+
+    private def logFailureElements(v: Vector[Try[_]]) =
+      if (v.nonEmpty)
+        Future {
+          v.map({
+            case Failure(err) =>
+              logger.error("Something went wrong!!!", err)
+            case uV =>
+              logger.warn(s"Not found handler for the next type. Obj - $uV")
+          })
+        }
+
     implicit def flattenWithLog[T](collection: Vector[Try[T]]): Vector[T] = {
-      val r = collection.span(_.isSuccess)
-      Future {
-        r._2.map({
-          case Failure(err) =>
-            logger.error("Something went wrong!!!", err)
-          case uV =>
-            logger.warn(s"Not found handler for the next type. Obj - $uV")
-        })
-      }
+      val r = collection.partition(_.isSuccess)
+      logFailureElements(r._2)
       r._1.map(_.get)
     }
   }
