@@ -9,17 +9,6 @@ import service.mongo.model.SportEvent.Field.{date, firstTeam, secondTeam}
 
 trait SportEventQueryBuilder extends QueryBuilder {
 
-  protected def getDateEventFilter(d: Date, fT: String, sT: String) =
-    and(equal(date, d), equal(firstTeam, fT), equal(secondTeam, sT))
-
-  protected def getDateEventFilter(d: Date, bson: Bson, sT: String) =
-    and(equal(date, d), bson, equal(secondTeam, sT))
-
-  protected def getDateEventFilter(d: Date, fT: String, bson: Bson) =
-    and(equal(date, d), equal(firstTeam, fT), bson)
-
-  protected def getDateEventFilter(d: Date, v1: Bson, v2: Bson) =
-    and(equal(date, d), v1, v2)
   protected def getUpdateResultsFilter(p: PostEventWinInformation) =
     (p.firstTeam.endsWith("."), p.secondTeam.endsWith(".")) match {
       case (true, false) =>
@@ -36,4 +25,16 @@ trait SportEventQueryBuilder extends QueryBuilder {
                            getRegexQuery(secondTeam, s"^${p.secondTeam}*"))
       case _ => getDateEventFilter(p.date, p.firstTeam, p.secondTeam)
     }
+
+  protected def getDateEventFilter(d: Date, fT: String, sT: String) =
+    and(equal(date, d), equal(firstTeam, fT), equal(secondTeam, sT))
+
+  protected def getDateEventFilter(d: Date, fTBson: Bson, sT: String) =
+    and(equal(date, d), fTBson, equal(secondTeam, sT))
+
+  protected def getDateEventFilter(d: Date, fT: String, sTBson: Bson) =
+    and(equal(date, d), equal(firstTeam, fT), sTBson)
+
+  protected def getDateEventFilter(d: Date, fTBson: Bson, sTBson: Bson) =
+    and(equal(date, d), fTBson, sTBson)
 }

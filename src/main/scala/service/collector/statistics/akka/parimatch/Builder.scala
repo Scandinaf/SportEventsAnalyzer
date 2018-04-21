@@ -6,6 +6,7 @@ import service.collector.statistics.model.PostEventWinInformation
 import service.logging.Logger
 import service.mongo.model.EventResult
 import service.mongo.model.EventResult.{Draw, FirstTeam, SecondTeam}
+import service.utils.StringHelper.checkAndExcludeBracket
 
 object Builder extends Logger {
   private val dtf = DateTimeFormat.forPattern("dd.MM.yy HH:mm")
@@ -20,18 +21,13 @@ object Builder extends Logger {
         None
     }
 
-  private def checkAndExcludeBracket(value: String) =
-    if (value.contains(Dictionary.bracket))
-      value.substring(0, value.indexOf(Dictionary.bracket) - 1)
-    else value
-
   private def elementToEntity(score: String,
                               firstTeam: String,
                               secondTeam: String,
                               date: Element) =
     calculateWinTeam(score, firstTeam, secondTeam).map(
-      createPostEventWinInformation(checkAndExcludeBracket(firstTeam),
-                                    checkAndExcludeBracket(secondTeam),
+      createPostEventWinInformation(checkAndExcludeBracket(firstTeam, 1),
+                                    checkAndExcludeBracket(secondTeam, 1),
                                     date,
                                     _)
     )
@@ -81,6 +77,5 @@ object Builder extends Logger {
 
   private object Dictionary {
     val matchNotTakePlace = "Матч не состоялся"
-    val bracket = '('
   }
 }
