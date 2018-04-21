@@ -5,6 +5,7 @@ import akka.actor.{Actor, OneForOneStrategy, SupervisorStrategy}
 import org.mongodb.scala.BulkWriteResult
 import service.akka.lb.LoadBalancerActor.Message.HtmlElementsMessage
 import service.collector.statistics.akka.parimatch.Builder
+import service.collector.statistics.utils.AliasSupervisor
 import service.logging.Logger
 import service.mongo.DBLayer
 import service.mongo.observer.CommonObserver
@@ -12,7 +13,10 @@ import service.mongo.observer.CommonObserver
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class HandlerActor extends Actor with Logger {
+class HandlerActor extends Actor with AliasSupervisor with Logger {
+
+  override protected val aliases: Map[String, String] = Map(
+    "Зенит" -> "Зенит Ст.Петербург")
 
   override def supervisorStrategy: SupervisorStrategy =
     OneForOneStrategy(maxNrOfRetries = 10, withinTimeRange = 1 minute) {
@@ -28,7 +32,7 @@ class HandlerActor extends Actor with Logger {
       elements.map(el => Builder.elementToEntity(el)).flatten match {
         case elements @ Vector(_, _*) =>
           DBLayer.sportEventDAO_Football
-            .updateResults(elements)
+            .updateResults(elements.map(replaceAlias))
             .subscribe(new CommonObserver[BulkWriteResult])
         case _ => logger.warn("No items!!!")
       }
