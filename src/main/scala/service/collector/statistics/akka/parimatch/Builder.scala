@@ -47,15 +47,15 @@ object Builder extends Logger {
                                firstTeam: String,
                                secondTeam: String) =
     scoreString match {
-      case Dictionary.matchNotTakePlace => Some(EventResult())
+      case "" =>
+        logger.warn(
+          s"Couldn't handle data for the winner calculation process. FirstTeam: $firstTeam, SecondTeam: $secondTeam, Score: $scoreString.")
+        None
       case _ =>
         splitScore(scoreString) match {
           case Array(scoreFirstTeam, scoreSecondTeam) =>
             matchScore(scoreString, scoreFirstTeam.toInt, scoreSecondTeam.toInt)
-          case _ =>
-            logger.warn(
-              s"Couldn't handle data for the winner calculation process. FirstTeam: $firstTeam, SecondTeam: $secondTeam, Score: $scoreString.")
-            None
+          case _ => Some(EventResult())
         }
     }
 
@@ -74,8 +74,4 @@ object Builder extends Logger {
 
   private def splitScore(score: String) =
     score.split(" ").apply(0).split(":")
-
-  private object Dictionary {
-    val matchNotTakePlace = "Матч не состоялся"
-  }
 }
