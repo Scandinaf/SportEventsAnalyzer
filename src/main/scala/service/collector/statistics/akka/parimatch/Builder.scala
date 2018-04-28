@@ -8,6 +8,8 @@ import service.mongo.model.EventResult
 import service.mongo.model.EventResult.{Draw, FirstTeam, SecondTeam}
 import service.utils.StringHelper.checkAndExcludeBracket
 
+import scala.util.{Failure, Success, Try}
+
 object Builder extends Logger {
   private val dtf = DateTimeFormat.forPattern("dd.MM.yy HH:mm")
 
@@ -50,16 +52,29 @@ object Builder extends Logger {
       case "" => None
       case Dictionary.matchNotTakePlace | Dictionary.matchNotTakePlaceLC =>
         Some(EventResult())
-      case str if (str.contains("прерван")) => Some(EventResult())
+      case str if (str.contains(Dictionary.matchInterrupted)) =>
+        Some(EventResult())
       case _ =>
         splitScore(scoreString) match {
           case Array(scoreFirstTeam, scoreSecondTeam) =>
-            matchScore(scoreString, scoreFirstTeam.toInt, scoreSecondTeam.toInt)
+            matchScore(scoreFirstTeam, scoreSecondTeam, scoreString)
           case _ =>
             logger.warn(
               s"Couldn't handle data for the winner calculation process. FirstTeam: $firstTeam, SecondTeam: $secondTeam, Score: $scoreString.")
             None
         }
+    }
+
+  private def matchScore(scoreFirstTeam: String,
+                         scoreSecondTeam: String,
+                         scoreString: String): Option[EventResult] =
+    Try((scoreFirstTeam.toInt, scoreSecondTeam.toInt)) match {
+      case Success((sft, sst)) => matchScore(scoreString, sft, sst)
+      case Failure(ex) =>
+        logger.error(
+          s"An error occurred while trying to parse the data. Score: $scoreString",
+          ex)
+        None
     }
 
   private def matchScore(scoreString: String, scoreFT: Int, scoreST: Int) =
@@ -85,5 +100,6 @@ object Builder extends Logger {
   object Dictionary {
     val matchNotTakePlace = "\u00A0Матч\u00A0не\u00A0состоялся"
     val matchNotTakePlaceLC = "\u00A0матч\u00A0не\u00A0состоялся"
+    val matchInterrupted = "прерван"
   }
 }
