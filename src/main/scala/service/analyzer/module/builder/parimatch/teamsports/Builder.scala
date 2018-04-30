@@ -1,13 +1,14 @@
 package service.analyzer.module.builder.parimatch.teamsports
 
 import com.github.nscala_time.time.Imports.DateTimeFormat
-import net.ruippeixotog.scalascraper.model.{Element, TextNode}
+import net.ruippeixotog.scalascraper.model.{Element, ElementNode, Node, TextNode}
 import service.analyzer.exception.IncorrectHtmlException
 import service.analyzer.module.builder.ModelBuilder
 import service.analyzer.module.builder.parimatch.Config.TeamSports._
 import service.mongo.model.{Bet, SportEvent}
 import service.utils.StringHelper.checkAndExcludeBracket
 
+import scala.collection.Iterable
 import scala.util.Try
 
 /**
@@ -55,13 +56,23 @@ protected[module] trait Builder extends ModelBuilder[SportEvent] {
     val aEl = el.select("a")
     if (aEl.size != 1)
       throw new IncorrectHtmlException(el)
-    aEl.head.childNodes
-      .filter(_.isInstanceOf[TextNode])
-      .map(_.asInstanceOf[TextNode].content)
-      .toVector match {
-      case Vector(fT, sT) =>
-        (checkAndExcludeBracket(fT), checkAndExcludeBracket(sT))
-      case _ => throw new IncorrectHtmlException(el)
+    parseNodes(aEl.head.childNodes) match {
+      case Some(v) =>
+        (checkAndExcludeBracket(v._1), checkAndExcludeBracket(v._2))
+      case None => throw new IncorrectHtmlException(el)
     }
   }
+
+  protected def parseNodes(it: Iterable[Node]): Option[(String, String)] =
+    it.toVector match {
+      case Vector(el1: TextNode, _, el2: TextNode) =>
+        Some((el1.content, el2.content))
+      case Vector(el1: ElementNode[_], _, el2: ElementNode[_]) =>
+        Some((el1.element.text, el2.element.text))
+      case Vector(el1: TextNode, _, el2: ElementNode[_]) =>
+        Some((el1.content, el2.element.text))
+      case Vector(el1: ElementNode[_], _, el2: TextNode) =>
+        Some((el1.element.text, el2.content))
+      case _ => None
+    }
 }

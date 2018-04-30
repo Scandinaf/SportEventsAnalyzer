@@ -9,10 +9,6 @@ class ConfigSpec extends FlatSpec {
 
   behavior of "Config"
 
-  "Websites block" should "be non-empty" in {
-    assert(!Config.websites.isEmpty)
-  }
-
   "Attempt to read the MongoDB block" should "not throw exception" in {
     Config.mongoDBSettings
   }

@@ -5,7 +5,12 @@ import java.util.{Calendar, Date}
 import service.utils.ImplicitHelper.CalendarImplicits.CalendarBuilder
 
 object TimeDateUtil {
-  def getCalendarInstance = Calendar.getInstance()
+  def getCurrentDate = getCalendarInstance.getTime
+
+  def getFutureDate(addMonths: Int = 3) =
+    setTimeBeginningDay(getCalendarInstance)
+      .addB(Calendar.MONTH, addMonths)
+      .getTime
 
   def checkDateInRange[T](l: Vector[T], range: DateRange, f: T => Date) = {
     val d = getDateByRange(range)
@@ -14,6 +19,8 @@ object TimeDateUtil {
 
   def checkDateInRange(date: Date, range: DateRange) =
     getDateByRange(range).check(date)
+
+  private def getCalendarInstance = Calendar.getInstance()
 
   private def getDateByRange(range: DateRange) = range match {
     case DayRange  => getDate(Calendar.DAY_OF_WEEK, 2)

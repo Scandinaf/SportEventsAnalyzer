@@ -4,7 +4,7 @@ import akka.actor.{ActorSystem, Props}
 import akka.routing.SmallestMailboxPool
 import akka.stream.ActorMaterializer
 import service.akka.lb.LoadBalancerActor
-import service.analyzer.AnalyzerActor
+import service.analyzer.RoutingAnalyzerActor
 import service.collector.statistics.akka.PostEventStatisticsActor
 
 import scala.concurrent.ExecutionContext
@@ -20,11 +20,9 @@ object ApplicationSettings {
     implicit val materializer = ActorMaterializer()
     implicit val forkJoinEC: ExecutionContext =
       system.dispatchers.lookup("fork-join-dispatcher-common")
-    val analyzerActor = system.actorOf(
-      SmallestMailboxPool(5)
-        .props(Props[AnalyzerActor])
-        .withDispatcher("fork-join-dispatcher"),
-      AnalyzerActor.name)
+    val routingAnalyzerActor = system.actorOf(
+      Props[RoutingAnalyzerActor].withDispatcher("fork-join-dispatcher"),
+      RoutingAnalyzerActor.name)
     val postEventStatisticsActor = system.actorOf(
       Props[PostEventStatisticsActor].withDispatcher("fork-join-dispatcher"),
       PostEventStatisticsActor.name)

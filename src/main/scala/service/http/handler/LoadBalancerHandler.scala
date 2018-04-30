@@ -2,12 +2,11 @@ package service.http.handler
 
 import akka.actor.ActorRef
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse, StatusCodes}
-import model.ApplicationSettings.Actor.lbActor
+import model.ApplicationSettings.Actor.{forkJoinEC, lbActor}
 import service.akka.lb.LoadBalancerActor.Message.HtmlContentBalancing
 import service.logging.Logger
-import model.ApplicationSettings.Actor.forkJoinEC
 
-class PostEventStatisticsHandler
+class LoadBalancerHandler
     extends BaseHttpHandler[Unit, (String, ActorRef)]
     with Logger {
   override def handler(req: HttpRequest,
@@ -20,6 +19,6 @@ class PostEventStatisticsHandler
     }
 }
 
-object PostEventStatisticsHandler {
-  def apply(): PostEventStatisticsHandler = new PostEventStatisticsHandler()
+object LoadBalancerHandler {
+  def apply(): LoadBalancerHandler = new LoadBalancerHandler()
 }

@@ -1,26 +1,12 @@
 package service.collector.statistics.akka
 
-import akka.actor.SupervisorStrategy.Resume
-import akka.actor.{Actor, OneForOneStrategy, Props, SupervisorStrategy}
+import akka.actor.Props
+import service.akka.ActorTemplate
 import service.collector.statistics.akka.PostEventStatisticsActor.Message.CollectStatistics
 import service.collector.statistics.akka.PostEventStatisticsActor.name
-import service.logging.Logger
 
-import scala.concurrent.duration._
-import scala.language.postfixOps
-
-class PostEventStatisticsActor extends Actor with Logger {
-
+class PostEventStatisticsActor extends ActorTemplate {
   override def preStart(): Unit = initializeChildActors
-
-  override def supervisorStrategy: SupervisorStrategy =
-    OneForOneStrategy(maxNrOfRetries = 10, withinTimeRange = 1 minute) {
-      case x => {
-        logger.error("Something went wrong during the execution of the actor.",
-                     x)
-        Resume
-      }
-    }
 
   override def receive: Receive = {
     case CollectStatistics => process
@@ -40,7 +26,7 @@ class PostEventStatisticsActor extends Actor with Logger {
 }
 
 object PostEventStatisticsActor {
-  val name = "postEventStatisticsActor"
+  val name = "PostEventStatisticsActor"
   object Message {
     object CollectStatistics
   }

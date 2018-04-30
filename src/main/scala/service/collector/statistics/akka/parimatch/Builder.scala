@@ -28,8 +28,8 @@ object Builder extends Logger {
                               secondTeam: String,
                               date: Element) =
     calculateWinTeam(score, firstTeam, secondTeam).map(
-      createPostEventWinInformation(checkAndExcludeBracket(firstTeam, 1),
-                                    checkAndExcludeBracket(secondTeam, 1),
+      createPostEventWinInformation(checkAndExcludeBracket(firstTeam),
+                                    checkAndExcludeBracket(secondTeam),
                                     date,
                                     _)
     )

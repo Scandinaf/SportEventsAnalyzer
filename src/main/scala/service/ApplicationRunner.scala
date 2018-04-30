@@ -1,11 +1,8 @@
 package service
 
-import _root_.akka.http.scaladsl.model.HttpRequest
-import model.{ApplicationSettings, Page, Website}
+import model.ApplicationSettings
+import service.analyzer.RoutingAnalyzerActor.Message.StartAnalyze
 import service.collector.statistics.akka.PostEventStatisticsActor.Message.CollectStatistics
-import service.http.HttpClient
-import service.http.handler.WebsiteHandler
-import service.http.model.HttpRequestCompanion
 import service.logging.Logger
 
 /**
@@ -13,16 +10,9 @@ import service.logging.Logger
   */
 class ApplicationRunner extends Logger {
   def start = {
-    pullHttpRequests(createHttpRequests(Config.websites))
     ApplicationSettings.Actor.postEventStatisticsActor ! CollectStatistics
+    ApplicationSettings.Actor.routingAnalyzerActor ! StartAnalyze
   }
-
-  private def createHttpRequests(websites: Vector[Website]) =
-    HttpRequestCompanion(websites)
-
-  private def pullHttpRequests(requests: Vector[(HttpRequest, Page)]) =
-    HttpClient.Get.callByStreamWithHandler(requests.iterator)(
-      WebsiteHandler().handler)
 }
 
 object ApplicationRunner {

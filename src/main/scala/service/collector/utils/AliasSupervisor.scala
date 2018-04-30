@@ -1,4 +1,4 @@
-package service.collector.statistics.utils
+package service.collector.utils
 
 import service.collector.statistics.model.PostEventWinInformation
 
