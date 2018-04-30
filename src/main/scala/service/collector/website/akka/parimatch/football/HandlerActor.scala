@@ -5,6 +5,7 @@ import java.util.Date
 import akka.actor.{ActorRef, Props}
 import net.ruippeixotog.scalascraper.model.Element
 import org.mongodb.scala.Completed
+import service.Config.{Parimatch => config}
 import service.akka.ActorTemplate
 import service.akka.combiner.ProcessDoneActor.Message.PartWorkPerformed
 import service.akka.lb.LoadBalancerActor.Message.HtmlElementsMessage
@@ -21,10 +22,9 @@ class HandlerActor(actorRef: ActorRef)
   override protected val phrases: Vector[String] =
     Vector("Сравнение команд по индивидуальному тоталу",
            "Специальные предложения")
-  val cssQuery =
-    "div#oddsList > form#f1 > div.container.gray > div.wrapper > table.dt.twp > tbody:not(.props,.spacer) > tr"
-  val baseUrl = "https://www.parimatch.by"
-  val module = "parimatch.TeamSports"
+  val cssQuery = config.footballConfig.cssQuery
+  val baseUrl = config.baseUrl
+  val module = config.footballConfig.module
   val tag = Website.Tag.football
 
   override def receive: Receive = {

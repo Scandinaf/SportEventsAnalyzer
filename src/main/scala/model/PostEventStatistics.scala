@@ -2,16 +2,16 @@ package model
 
 import com.typesafe.config.Config
 
-case class PostEventStatistics(baseUrl: String, cssQuery: String)
+case class PostEventStatistics(path: String, cssQuery: String)
 
 object PostEventStatistics {
   def apply(config: Config): PostEventStatistics =
-    new PostEventStatistics(config.getString(Config.baseUrl),
+    new PostEventStatistics(config.getString(Config.path),
                             config.getString(Config.cssQuery))
 
   object Config {
-    def getBlockName(name: String) = s"postEventStatistics_$name"
-    val baseUrl = "baseUrl"
+    val blockName = "postEventStatistics"
+    val path = "path"
     val cssQuery = "cssQuery"
   }
 }

@@ -4,7 +4,7 @@ import akka.actor.Props
 import akka.http.scaladsl.model.HttpRequest
 import akka.routing.RoundRobinPool
 import com.github.nscala_time.time.Imports.{DateTime, DateTimeFormat}
-import service.Config
+import service.Config.{Parimatch => config}
 import service.akka.ActorTemplate
 import service.collector.statistics.akka.PostEventStatisticsActor.Message.CollectStatistics
 import service.collector.statistics.akka.parimatch.football.HandlerActor
@@ -13,8 +13,9 @@ import service.http.handler.LoadBalancerHandler
 
 protected[akka] class PostEventStatisticsFootballActor extends ActorTemplate {
   protected val dtf = DateTimeFormat.forPattern("yyyyMMdd")
-  protected val baseUrl = Config.postEventStatisticsParimatchSettings.baseUrl
-  protected val cssQuery = Config.postEventStatisticsParimatchSettings.cssQuery
+  protected val url =
+    s"${config.baseUrl}${config.postEventStatisticsSettings.path}"
+  protected val cssQuery = config.postEventStatisticsSettings.cssQuery
   protected val child = context.actorOf(
     RoundRobinPool(5)
       .props(Props[HandlerActor])
@@ -37,7 +38,7 @@ protected[akka] class PostEventStatisticsFootballActor extends ActorTemplate {
 
   private def getUrl = {
     val currentDate = DateTime.yesterday.toString(dtf)
-    s"$baseUrl$currentDate&SK=21"
+    s"$url$currentDate&SK=21"
   }
 }
 
