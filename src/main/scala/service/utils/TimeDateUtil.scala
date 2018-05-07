@@ -7,11 +7,6 @@ import service.utils.ImplicitHelper.CalendarImplicits.CalendarBuilder
 object TimeDateUtil {
   def getCurrentDate = getCalendarInstance.getTime
 
-  def getFutureDate(addMonths: Int = 3) =
-    setTimeBeginningDay(getCalendarInstance)
-      .addB(Calendar.MONTH, addMonths)
-      .getTime
-
   def checkDateInRange[T](l: Vector[T], range: DateRange, f: T => Date) = {
     val d = getDateByRange(range)
     l.filter(v => d.check(f(v)))

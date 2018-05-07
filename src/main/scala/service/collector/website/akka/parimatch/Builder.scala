@@ -1,7 +1,5 @@
 package service.collector.website.akka.parimatch
 
-import java.util.Date
-
 import net.ruippeixotog.scalascraper.model.Element
 import service.logging.Logger
 import service.mongo.model.Website
@@ -14,16 +12,14 @@ object Builder extends Logger {
                       cssQuery: String,
                       module: String,
                       tag: String,
-                      baseUrl: String,
-                      expirationDate: Date): Option[Website] =
+                      baseUrl: String): Option[Website] =
     el.tagName match {
       case `tagNameA` =>
         Some(
           Website(url = buildUrl(baseUrl, el.attr(attributeHref)),
                   module = module,
                   cssQuery = cssQuery,
-                  tag = tag,
-                  expirationDate = expirationDate))
+                  tag = tag))
       case tN =>
         logger.warn(
           s"Couldn't find the handler for TagName - $tN. Element - $el.")
