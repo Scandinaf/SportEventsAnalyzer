@@ -5,8 +5,6 @@ import java.util.{Calendar, Date}
 import service.utils.ImplicitHelper.CalendarImplicits.CalendarBuilder
 
 object TimeDateUtil {
-  def getCurrentDate = getCalendarInstance.getTime
-
   def checkDateInRange[T](l: Vector[T], range: DateRange, f: T => Date) = {
     val d = getDateByRange(range)
     l.filter(v => d.check(f(v)))
@@ -14,6 +12,12 @@ object TimeDateUtil {
 
   def checkDateInRange(date: Date, range: DateRange) =
     getDateByRange(range).check(date)
+
+  def getStartEndDate(date: Date) = {
+    val c = getCalendarInstance
+    c.setTime(date)
+    (setTimeBeginningDay(c).getTime, setTimeEndingDay(c).getTime)
+  }
 
   private def getCalendarInstance = Calendar.getInstance()
 
@@ -30,10 +34,14 @@ object TimeDateUtil {
                           .getTime)
   }
 
-  private def setTimeBeginningDay(c: Calendar) =
-    c.setB(Calendar.HOUR_OF_DAY, 0)
-      .setB(Calendar.MINUTE, 0)
-      .setB(Calendar.SECOND, 0)
+  private def setTimeBeginningDay(c: Calendar) = setTime(c, 0, 0, 0)
+
+  private def setTimeEndingDay(c: Calendar) = setTime(c, 23, 59, 59)
+
+  private def setTime(c: Calendar, h: Int, m: Int, s: Int) =
+    c.setB(Calendar.HOUR_OF_DAY, h)
+      .setB(Calendar.MINUTE, m)
+      .setB(Calendar.SECOND, s)
 
   sealed trait DateRange
   object DayRange extends DateRange

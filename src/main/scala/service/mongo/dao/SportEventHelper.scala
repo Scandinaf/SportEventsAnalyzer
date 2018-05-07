@@ -1,5 +1,6 @@
 package service.mongo.dao
 
+import com.github.nscala_time.time.Imports.DateTime
 import org.mongodb.scala.MongoCollection
 import org.mongodb.scala.model.{UpdateOneModel, UpdateOptions}
 import service.collector.statistics.model.PostEventWinInformation
@@ -8,6 +9,7 @@ import service.mongo.bson.{SportEventBsonBuilder, SportEventQueryBuilder}
 import service.mongo.helper.MongoResultHelper
 import service.mongo.indexes.SportEventIndexInitializer
 import service.mongo.model.SportEvent
+import service.utils.TimeDateUtil
 
 trait SportEventHelper {
   class SportEventDAOComponent(val collection: MongoCollection[SportEvent])
@@ -20,10 +22,13 @@ trait SportEventHelper {
     initializeIndexes
 
     def updateResults(l: Vector[PostEventWinInformation]) =
-      collection.bulkWrite(
-        l.map(e =>
-          UpdateOneModel.apply(getUpdateResultsFilter(e),
-                               getSetEventResult(e.eventResult))))
+      TimeDateUtil.getStartEndDate(DateTime.yesterday.toDate) match {
+        case (sD, eD) =>
+          collection.bulkWrite(
+            l.map(e =>
+              UpdateOneModel.apply(getUpdateResultsFilter(e, sD, eD),
+                                   getSetEventResult(e.eventResult))))
+      }
 
     def insertOrUpdate(v: SportEvent) =
       collection.updateOne(
