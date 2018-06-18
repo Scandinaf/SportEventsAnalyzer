@@ -1,7 +1,5 @@
 package service.collector.website.akka.parimatch.football
 
-import java.util.Date
-
 import akka.actor.{ActorRef, Props}
 import net.ruippeixotog.scalascraper.model.Element
 import org.mongodb.scala.Completed
@@ -14,7 +12,6 @@ import service.collector.website.akka.parimatch.Builder
 import service.mongo.DBLayer
 import service.mongo.model.Website
 import service.mongo.observer.CommonObserver
-import service.utils.TimeDateUtil
 
 class HandlerActor(actorRef: ActorRef)
     extends ActorTemplate
@@ -29,10 +26,7 @@ class HandlerActor(actorRef: ActorRef)
 
   override def receive: Receive = {
     case HtmlElementsMessage(elements) =>
-      val expirationDate = TimeDateUtil.getFutureDate()
-      elements
-        .map(handler(_, expirationDate))
-        .flatten match {
+      elements.map(handler(_)).flatten match {
         case elements @ Vector(_, _*) =>
           saveWebsites(elements)
           actorRef ! PartWorkPerformed(
@@ -41,15 +35,10 @@ class HandlerActor(actorRef: ActorRef)
       }
   }
 
-  private def handler(el: Element, expirationDate: Date) =
+  private def handler(el: Element) =
     if (necessaryExclude(el.text)) None
     else
-      Builder.elementToEntity(el,
-                              cssQuery,
-                              module,
-                              tag,
-                              baseUrl,
-                              expirationDate)
+      Builder.elementToEntity(el, cssQuery, module, tag, baseUrl)
 
   private def saveWebsites(elements: Vector[Website]) =
     DBLayer.websiteDAO.insert(elements).subscribe(new CommonObserver[Completed])

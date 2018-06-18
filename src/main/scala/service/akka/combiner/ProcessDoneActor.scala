@@ -13,7 +13,7 @@ class ProcessDoneActor(processName: String, actor: ActorRef)
     with Logger {
   startWith(Active, NoData)
 
-  when(Active, stateTimeout = 3 minute) {
+  when(Active, stateTimeout = 1 minute) {
     case Event(StateTimeout, _) =>
       logger.info(s"The process $processName is completed.")
       actor ! ProcessCompleted
