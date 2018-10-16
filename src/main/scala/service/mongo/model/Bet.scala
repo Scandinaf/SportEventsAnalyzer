@@ -9,4 +9,4 @@ case class Bet(winF: Double,
                winFD: Option[Double] = None,
                winSD: Option[Double] = None,
                total: Option[Total] = None,
-               individual_total: Option[Total] = None)
+               individual_total: Option[IndividualTotal] = None)

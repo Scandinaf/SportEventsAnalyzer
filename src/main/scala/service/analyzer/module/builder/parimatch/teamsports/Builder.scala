@@ -5,7 +5,7 @@ import net.ruippeixotog.scalascraper.model.{Element, ElementNode, Node, TextNode
 import service.analyzer.exception.IncorrectHtmlException
 import service.analyzer.module.builder.ModelBuilder
 import service.analyzer.module.builder.parimatch.Config.TeamSports._
-import service.mongo.model.{Bet, SportEvent, Total}
+import service.mongo.model.{Bet, IndividualTotal, SportEvent, Total}
 import service.utils.StringHelper.checkAndExcludeBracket
 
 import scala.collection.Iterable
@@ -51,8 +51,8 @@ protected[module] trait Builder extends ModelBuilder[SportEvent] {
         parseTextToDouble(
           getElementText(getIndex(winSD, textPosMap), children))),
       total = Some(getTotal(getIndex(total, textPosMap), children)),
-      individual_total =
-        Some(getTotal(getIndex(individual_total, textPosMap), children)),
+      individual_total = Some(
+        getIndividualTotal(getIndex(individual_total, textPosMap), children)),
     )
 
   protected def getEvent(el: Element) = {
@@ -77,6 +77,24 @@ protected[module] trait Builder extends ModelBuilder[SportEvent] {
       case Vector(el1: ElementNode[_], _, el2: TextNode) =>
         Some((el1.element.text, el2.content))
       case _ => None
+    }
+
+  protected def getIndividualTotal(total_index: Int,
+                                   children: Vector[Element]): IndividualTotal =
+    (getElement(total_index, children).children
+       .map(e => parseTextToDouble(e.text))
+       .toList,
+     getElement(total_index + 1, children).children
+       .map(e => parseTextToDouble(e.text))
+       .toList,
+     getElement(total_index + 2, children).children
+       .map(e => parseTextToDouble(e.text))
+       .toList) match {
+      case (List(ftTotal, scTotal),
+            List(ftOver, stOver),
+            List(ftUnder, stUnder)) =>
+        IndividualTotal(Total(ftTotal, ftOver, ftUnder),
+                        Total(scTotal, stOver, stUnder))
     }
 
   protected def getTotal(total_index: Int, children: Vector[Element]): Total =

@@ -11,6 +11,7 @@ import service.mongo.model._
 protected object Codecs {
   val codecRegistry = fromRegistries(fromProviders(classOf[SportEvent],
                                                    classOf[Bet],
+                                                   classOf[IndividualTotal],
                                                    classOf[Total],
                                                    classOf[EventResult],
                                                    classOf[Website]),
