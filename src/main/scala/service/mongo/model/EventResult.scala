@@ -13,9 +13,4 @@ object EventResult {
   case object FirstTeam extends Winner { protected[model] val numberV = 1 }
   case object SecondTeam extends Winner { protected[model] val numberV = 2 }
   case object Draw extends Winner { protected[model] val numberV = 3 }
-
-  object Field {
-    val score = "score"
-    val winner = "winner"
-  }
 }
