@@ -51,9 +51,9 @@ object Builder extends Logger {
     scoreString match {
       case "" => None
       case Dictionary.matchNotTakePlace | Dictionary.matchNotTakePlaceLC =>
-        Some(EventResult())
+        Some(EventResult.apply)
       case str if (str.contains(Dictionary.matchInterrupted)) =>
-        Some(EventResult())
+        Some(EventResult.apply)
       case _ =>
         splitScore(scoreString) match {
           case Array(scoreFirstTeam, scoreSecondTeam) =>
