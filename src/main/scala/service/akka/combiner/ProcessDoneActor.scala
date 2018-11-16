@@ -27,6 +27,8 @@ class ProcessDoneActor(processName: String, actor: ActorRef)
 }
 
 object ProcessDoneActor {
+  val name = "FSMActor"
+
   def props(processName: String, actor: ActorRef): Props =
     Props(classOf[ProcessDoneActor], processName, actor)
 

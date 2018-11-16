@@ -12,6 +12,7 @@ case class Website(_id: ObjectId = new ObjectId(),
 object Website {
   object Tag {
     val football = "football"
+    val hockey = "hockey"
   }
 
   object Field {

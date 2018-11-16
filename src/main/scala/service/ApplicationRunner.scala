@@ -5,6 +5,7 @@ import model.ApplicationSettings.Actor.forkJoinEC
 import service.analyzer.RoutingAnalyzerActor.Message.StartAnalyze
 import service.collector.statistics.akka.PostEventStatisticsActor.Message.CollectStatistics
 import service.logging.Logger
+import scala.language.postfixOps
 
 import scala.concurrent.duration._
 

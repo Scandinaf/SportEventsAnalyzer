@@ -3,10 +3,9 @@ package service.collector.website.akka
 import model.ApplicationSettings
 import service.akka.ActorTemplate
 import service.akka.combiner.ProcessDoneActor
-import service.analyzer.RoutingAnalyzerActor
 import service.collector.website.akka.WebsiteActor.Message.CollectInformation
-import service.collector.website.akka.WebsiteActor.name
 import service.collector.website.akka.parimatch.football.FootballWebsitesActor
+import service.collector.website.akka.parimatch.hockey.HockeyWebsitesActor
 
 class WebsiteActor extends ActorTemplate {
   override def preStart(): Unit = initializeChildActors
@@ -17,20 +16,29 @@ class WebsiteActor extends ActorTemplate {
   }
 
   private def initializeChildActors = {
-    val fsmActor = context.system.actorOf(
+    val fsmActor = context.actorOf(
       ProcessDoneActor
         .props("Gathering information about websites",
                ApplicationSettings.Actor.routingAnalyzerActor)
-        .withDispatcher("fork-join-dispatcher"))
+        .withDispatcher("fork-join-dispatcher"),
+      ProcessDoneActor.name
+    )
     context.actorOf(FootballWebsitesActor
                       .props(fsmActor)
                       .withDispatcher("fork-join-dispatcher"),
                     FootballWebsitesActor.name)
+    context.actorOf(HockeyWebsitesActor
+                      .props(fsmActor)
+                      .withDispatcher("fork-join-dispatcher"),
+                    HockeyWebsitesActor.name)
   }
 
   private def process = {
     logger.info("The process of collecting information about websites began!!!")
-    context.actorSelection(s"/user/${RoutingAnalyzerActor.name}/$name/*") ! CollectInformation
+    context.children.foreach(
+      actor =>
+        if (!actor.path.name.eq(ProcessDoneActor.name))
+          actor ! CollectInformation)
   }
 }
 

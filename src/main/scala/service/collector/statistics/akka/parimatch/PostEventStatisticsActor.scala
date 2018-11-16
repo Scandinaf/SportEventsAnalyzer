@@ -1,30 +1,30 @@
-package service.collector.statistics.akka
+package service.collector.statistics.akka.parimatch
 
-import akka.actor.Props
+import akka.actor.ActorRef
 import akka.http.scaladsl.model.HttpRequest
-import akka.routing.RoundRobinPool
 import com.github.nscala_time.time.Imports.{DateTime, DateTimeFormat}
 import service.Config.{Parimatch => config}
 import service.akka.ActorTemplate
 import service.collector.statistics.akka.PostEventStatisticsActor.Message.CollectStatistics
-import service.collector.statistics.akka.parimatch.football.HandlerActor
 import service.http.HttpClient
 import service.http.handler.LoadBalancerHandler
 
-protected[akka] class PostEventStatisticsFootballActor extends ActorTemplate {
+trait PostEventStatisticsActor extends ActorTemplate {
   protected val dtf = DateTimeFormat.forPattern("yyyyMMdd")
   protected val url =
     s"${config.baseUrl}${config.postEventStatisticsSettings.path}"
   protected val cssQuery = config.postEventStatisticsSettings.cssQuery
-  protected val child = context.actorOf(
-    RoundRobinPool(5)
-      .props(Props[HandlerActor])
-      .withDispatcher("fork-join-dispatcher"),
-    HandlerActor.name)
+  protected val child: ActorRef
+  protected val sport_key: String
 
   override def receive: Receive = {
     case CollectStatistics => process
     case um                => logger.error(s"Unhandled message!!! $um")
+  }
+
+  protected def getUrl = {
+    val currentDate = DateTime.yesterday.toString(dtf)
+    s"$url$currentDate&SK=$sport_key"
   }
 
   private def process = {
@@ -35,13 +35,4 @@ protected[akka] class PostEventStatisticsFootballActor extends ActorTemplate {
                   (cssQuery, child),
                   LoadBalancerHandler().handler)
   }
-
-  private def getUrl = {
-    val currentDate = DateTime.yesterday.toString(dtf)
-    s"$url$currentDate&SK=21"
-  }
-}
-
-object PostEventStatisticsFootballActor {
-  val name = "PostEventStatisticsFootballActor"
 }

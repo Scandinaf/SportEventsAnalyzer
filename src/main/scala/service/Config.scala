@@ -15,6 +15,7 @@ object Config {
     private val pm_config = ConfigFactory.load("parimatch.conf")
     lazy val baseUrl = pm_config.getString("baseUrl")
     lazy val footballConfig = TeamSportConfig(pm_config.getConfig("football"))
+    lazy val hockeyConfig = TeamSportConfig(pm_config.getConfig("hockey"))
     lazy val postEventStatisticsSettings =
       PostEventStatistics(
         pm_config.getConfig(PostEventStatistics.Config.blockName))
