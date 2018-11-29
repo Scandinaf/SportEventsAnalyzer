@@ -29,7 +29,7 @@ trait PostEventStatisticsActor extends ActorTemplate {
 
   private def process = {
     logger.info(
-      "The process of collecting post-match football statistics began!!!")
+      s"The process of collecting post-match $sport_key statistics began!!!")
     HttpClient.Get
       .singleCall(HttpRequest(uri = getUrl),
                   (cssQuery, child),

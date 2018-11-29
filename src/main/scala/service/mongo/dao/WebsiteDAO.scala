@@ -4,7 +4,6 @@ import org.mongodb.scala.MongoCollection
 import org.mongodb.scala.model.InsertManyOptions
 import service.logging.Logger
 import service.mongo.MongoDBConnector
-import service.mongo.helper.MongoResultHelper
 import service.mongo.indexes.WebsiteIndexInitializer
 import service.mongo.model.Website
 
@@ -14,9 +13,7 @@ trait WebsiteDAO {
     MongoDBConnector.db.getCollection(collectionName))
 
   class WebsiteDAOComponent(val collection: MongoCollection[Website])
-      extends BaseDAOComponent[Website]
-      with MongoResultHelper[Website]
-      with WebsiteIndexInitializer
+      extends WebsiteIndexInitializer
       with Logger {
     initializeIndexes
 
