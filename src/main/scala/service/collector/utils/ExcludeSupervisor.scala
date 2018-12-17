@@ -6,5 +6,5 @@ trait ExcludeSupervisor {
   protected def necessaryExclude(v: String) = phrases.contains(v)
 
   protected def necessaryExcludePartialComparison(v: String) =
-    phrases.exists(_.contains(v))
+    phrases.exists(v.contains(_))
 }

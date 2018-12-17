@@ -4,6 +4,8 @@ import akka.actor.Props
 import service.akka.ActorTemplate
 import service.collector.statistics.akka.PostEventStatisticsActor.Message.CollectStatistics
 import service.collector.statistics.akka.PostEventStatisticsActor.name
+import service.collector.statistics.akka.parimatch.football.PostEventStatisticsFootballActor
+import service.collector.statistics.akka.parimatch.hockey.PostEventStatisticsHockeyActor
 
 class PostEventStatisticsActor extends ActorTemplate {
   override def preStart(): Unit = initializeChildActors
@@ -17,6 +19,9 @@ class PostEventStatisticsActor extends ActorTemplate {
     context.actorOf(Props[PostEventStatisticsFootballActor].withDispatcher(
                       "fork-join-dispatcher"),
                     PostEventStatisticsFootballActor.name)
+    context.actorOf(Props[PostEventStatisticsHockeyActor].withDispatcher(
+                      "fork-join-dispatcher"),
+                    PostEventStatisticsHockeyActor.name)
   }
 
   private def process = {

@@ -7,8 +7,7 @@ import org.mongodb.scala.bson.ObjectId
 /**
   * Created by serge on 08.03.2018.
   */
-case class SportEvent(_id: ObjectId = new ObjectId(),
-                      event: String,
+case class SportEvent(event: String,
                       firstTeam: String,
                       secondTeam: String,
                       date: Date,
